@@ -2,6 +2,7 @@
 #include "cnpy.h"
 #include "YAM2/yam2.h"
 #include <eigen3/Eigen/Dense>
+#include <h5pp/h5pp.h>
 #include "progressbar.hpp"
 
 using namespace std;
@@ -105,6 +106,10 @@ int main() {
     vector<double> m2cc;
     vector<yam2::FourMomentum> k1;
     vector<yam2::FourMomentum> k2;
+    vector<vector<double>> pa1_new;
+    vector<vector<double>> pa2_new;
+    vector<vector<double>> pb1_new;
+    vector<vector<double>> pb2_new;
 
     // For Running
     progressbar bar(NROWS);
@@ -119,6 +124,10 @@ int main() {
             m2cc.push_back(m2sol.value().m2());
             k1.push_back(m2sol.value().k1());
             k2.push_back(m2sol.value().k2());
+            pa1_new.push_back({pa1_e(i, 0), pa1_e(i, 1), pa1_e(i, 2), pa1_e(i, 3)});
+            pa2_new.push_back({pa2_e(i, 0), pa2_e(i, 1), pa2_e(i, 2), pa2_e(i, 3)});
+            pb1_new.push_back({pb1_e(i, 0), pb1_e(i, 1), pb1_e(i, 2), pb1_e(i, 3)});
+            pb2_new.push_back({pb2_e(i, 0), pb2_e(i, 1), pb2_e(i, 2), pb2_e(i, 3)});
         }
     }
 
@@ -129,40 +138,62 @@ int main() {
     cout << "Run Finish" << endl;
 
     // =========================================================================
-    // Write npz file
+    // Write hdf5 file
     // =========================================================================
     auto row = m2cc.size();
-    vector<double> k1_E(row);
-    vector<double> k1_x(row);
-    vector<double> k1_y(row);
-    vector<double> k1_z(row);
-    vector<double> k2_E(row);
-    vector<double> k2_x(row);
-    vector<double> k2_y(row);
-    vector<double> k2_z(row);
+    VectorXd m2cc_e(row);
+    MatrixX4d k1_e(row, 4);
+    MatrixX4d k2_e(row, 4);
+    MatrixX4d pa1_new_e(row, 4);
+    MatrixX4d pa2_new_e(row, 4);
+    MatrixX4d pb1_new_e(row, 4);
+    MatrixX4d pb2_new_e(row, 4);
 
     for (int i = 0; i < row; i++) {
-        k1_E[i] = k1[i].e();
-        k1_x[i] = k1[i].px();
-        k1_y[i] = k1[i].py();
-        k1_z[i] = k1[i].pz();
-        k2_E[i] = k2[i].e();
-        k2_x[i] = k2[i].px();
-        k2_y[i] = k2[i].py();
-        k2_z[i] = k2[i].pz();
+        m2cc_e(i) = m2cc[i];
+
+        k1_e(i, 0) = k1[i].e();
+        k1_e(i, 1) = k1[i].px();
+        k1_e(i, 2) = k1[i].py();
+        k1_e(i, 3) = k1[i].pz();
+
+        k2_e(i, 0) = k2[i].e();
+        k2_e(i, 1) = k2[i].px();
+        k2_e(i, 2) = k2[i].py();
+        k2_e(i, 3) = k2[i].pz();
+
+        pa1_new_e(i, 0) = pa1_new[i][0];
+        pa1_new_e(i, 1) = pa1_new[i][1];
+        pa1_new_e(i, 2) = pa1_new[i][2];
+        pa1_new_e(i, 3) = pa1_new[i][3];
+
+        pa2_new_e(i, 0) = pa2_new[i][0];
+        pa2_new_e(i, 1) = pa2_new[i][1];
+        pa2_new_e(i, 2) = pa2_new[i][2];
+        pa2_new_e(i, 3) = pa2_new[i][3];
+
+        pb1_new_e(i, 0) = pb1_new[i][0];
+        pb1_new_e(i, 1) = pb1_new[i][1];
+        pb1_new_e(i, 2) = pb1_new[i][2];
+        pb1_new_e(i, 3) = pb1_new[i][3];
+
+        pb2_new_e(i, 0) = pb2_new[i][0];
+        pb2_new_e(i, 1) = pb2_new[i][1];
+        pb2_new_e(i, 2) = pb2_new[i][2];
+        pb2_new_e(i, 3) = pb2_new[i][3];
     }
 
     cout << "Total data size: " << row << endl;
 
-    cnpy::npz_save("data/m2cc.npz", "m2", &m2cc, {row}, "w");
-    // cnpy::npz_save("data/m2cc.npz", "k1_E", &k1_E, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k1_x", &k1_x, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k1_y", &k1_y, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k1_z", &k1_z, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k2_E", &k2_E, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k2_x", &k2_x, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k2_y", &k2_y, {row}, "a");
-    // cnpy::npz_save("data/m2cc.npz", "k2_z", &k2_z, {row}, "a");
+    // Write to hdf5 file
+    h5pp::File file("data/m2cc.h5");
+    file.writeDataset(m2cc_e, "m2cc");
+    file.writeDataset(k1_e, "k1");
+    file.writeDataset(k2_e, "k2");
+    file.writeDataset(pa1_new_e, "pa1");
+    file.writeDataset(pa2_new_e, "pa2");
+    file.writeDataset(pb1_new_e, "pb1");
+    file.writeDataset(pb2_new_e, "pb2");
 
     cout << "Write Finish" << endl;
 
