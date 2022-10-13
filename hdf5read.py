@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import h5py
-from netCDF4 import Dataset
 
 g = np.array([1,-1,-1,-1])
 
