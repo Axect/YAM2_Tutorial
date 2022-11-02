@@ -18,7 +18,7 @@
     git clone https://github.com/cbpark/YAM2
     cd YAM2
     cd build
-    cmake cmake -Dnlopt_DIR=/usr -DCMAKE_INSTALL_PREFIX=/usr/local ..
+    cmake -Dnlopt_DIR=/usr -DCMAKE_INSTALL_PREFIX=/usr/local ..
     make
     sudo make install
     ```
@@ -34,5 +34,11 @@ g++ -o bin/test test.cc -I/usr/local/include/YAM2 -L/usr/local/lib -L/usr/lib/ro
 ## Toy
 
 ```sh
-g++ -w -O3 -o bin/toy toy.cc -I/usr/include/eigen3 -L/usr/lib/root -lcnpy -lz -lYAM2 -lnlopt -lCore -std=c++17
+g++ -w -O3 -o bin/toy toy.cc -I/usr/include/eigen3 -L/usr/lib/root -L/usr/local/lib -I/usr/local/include -lcnpy -lz -lYAM2 -Wl,-rpath /usr/local/lib -lnlopt -lCore -std=c++17
+```
+
+## Toy2
+
+```sh
+g++ -w -O3 -o bin/toy2 toy2.cc -I/usr/include/eigen3 -L/usr/lib/root -L/usr/local/lib -I/usr/local/include -lcnpy -lz -lYAM2 -Wl,-rpath /usr/local/lib -lnlopt -lCore -std=c++17
 ```
