@@ -1,6 +1,11 @@
-/yam2
-/.vscode
-/.ipynb_checkpoints
-/bin/test
-/bin/toy
-/data
+yam2/
+.vscode/
+.ipynb_checkpoints/
+bin/test
+bin/toy
+bin/ttbar
+data/
+target/
+*/target/
+*/**/target/
+

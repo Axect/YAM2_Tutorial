@@ -1,13 +1,11 @@
-#from netCDF4 import Dataset, Variable
-import numpy as np
+from netCDF4 import Dataset
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Open the netCDF file
-#nc = Dataset('./data/m2ccb.nc')
-#var = nc.variables
-#m2ccb = np.array(var['data'][:])
-
-m2ccb = np.loadtxt('./data/m2ccb.dat')
+nc = Dataset('./data/m2ccb.nc')
+var = nc.variables
+m2ccb = np.array(var['m2'][:])
 
 # Use latex
 plt.rc('text', usetex=True)
@@ -28,7 +26,10 @@ plt.legend(fontsize=12)
 plt.grid()
 plt.savefig("m2ccb_hist.png", dpi=300)
 
-m2ccb = np.loadtxt('./data/ttbar_m2ccb.dat')
+# Open the netCDF file
+nc = Dataset('./data/ttbar_m2ccb.nc')
+var = nc.variables
+m2ccb = np.array(var['m2'][:])
 
 # Use latex
 plt.rc('text', usetex=True)
