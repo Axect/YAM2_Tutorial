@@ -8,16 +8,16 @@
 using namespace std;
 using namespace Eigen;
 
-static const int NROWS = 1080000;
+static const int NROWS = 50000;
 static const int NCOLS = 4;
 static const int NDBG = 10;
 
 int main() {
-    std::ofstream output{"data/m2ccb.dat"};
+    std::ofstream output{"data/m2ccb_new.dat"};
     // =========================================================================
     // Read npz file
     // =========================================================================
-    auto data = cnpy::npz_load("data/toy_array_new.npz");
+    auto data = cnpy::npz_load("data/toy_array_preproc_test_50000.npz");
     
     auto b1 = data["b1"];
     double* pa1 = b1.data<double>();
