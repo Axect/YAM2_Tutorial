@@ -84,7 +84,19 @@ int main() {
         const auto m2sol = yam2::m2CCB(input);
 
         if (m2sol) {
-            output << m2sol.value().m2() << '\n';
+            const auto m2 = m2sol.value().m2();
+            const auto k1 = m2sol.value().k1();
+            const auto k2 = m2sol.value().k2();
+
+            output << m2 << '\t' 
+                << k1.e() << '\t'
+                << k1.px() << '\t' 
+                << k1.py() << '\t'
+                << k1.pz() << '\t'
+                << k2.e() << '\t'
+                << k2.px() << '\t'
+                << k2.py() << '\t'
+                << k2.pz() << endl;
             n++;
         }
     }
